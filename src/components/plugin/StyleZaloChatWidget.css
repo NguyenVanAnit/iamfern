@@ -1,0 +1,14 @@
+/* styles.css */
+.za-chat__head-box {
+	top: 10px !important;
+}
+
+.zalo-chat-widget {
+	bottom: 40px !important;
+	right: 60px !important;
+	z-index: 9999 !important;
+}
+
+.zalo-chat-widget {
+  padding-bottom: 5px !important; /* Giảm khoảng cách phía dưới */
+}
