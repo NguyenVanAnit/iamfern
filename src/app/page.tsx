@@ -1,8 +1,8 @@
 import { Metadata } from "next";
-import fs from "fs/promises"; // Import fs/promises
-import path from "path";
-import { Suspense } from "react";
-import dynamic from "next/dynamic";
+// import fs from "fs/promises"; // Import fs/promises
+// import path from "path";
+// import { Suspense } from "react";
+// import dynamic from "next/dynamic";
 import PdfViewer from "@/app/pdf/page";
 
 export const metadata: Metadata = {
@@ -39,8 +39,10 @@ export default async function Home() {
   //     </Suspense>
   //   </div>
   // );
-  const filePath = path.join(process.cwd(), "public", "portfolio.html");
-  const htmlData = await fs.readFile(filePath, "utf8");
+
+
+  // const filePath = path.join(process.cwd(), "public", "portfolio.html");
+  // const htmlData = await fs.readFile(filePath, "utf8");
 
   return (
     <div className="w-full min-h-screen">
