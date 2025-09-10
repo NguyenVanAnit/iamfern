@@ -6,6 +6,8 @@ import { getStaticAssetPath } from "@/lib/utils";
 
 // Set PDF.js worker with better mobile compatibility
 if (typeof window !== "undefined") {
+  // Use UMD build for better Safari mobile compatibility
+  // pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 }
 
@@ -13,9 +15,20 @@ export default function PdfViewerClient() {
   const [numPages, setNumPages] = useState<number>();
   const [widthPage, setWidthPage] = useState<number>(1440);
   const [isClient, setIsClient] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+  const [isSafari, setIsSafari] = useState(false);
+  const [useIframeFallback, setUseIframeFallback] = useState(false);
+  const [pdfLoadTimeout, setPdfLoadTimeout] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setIsClient(true);
+    
+    // Detect Safari mobile
+    if (typeof window !== "undefined") {
+      const userAgent = window.navigator.userAgent;
+      const isSafariMobile = /iPad|iPhone|iPod/.test(userAgent) && /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+      setIsSafari(isSafariMobile);
+    }
     
     const getWidthWindow = () => {
       if (typeof window !== "undefined") {
@@ -35,13 +48,27 @@ export default function PdfViewerClient() {
 
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
+      
+      // Set timeout for Safari mobile fallback
+      if (isSafari) {
+        const timeout = setTimeout(() => {
+          if (!numPages && !pdfError) {
+            console.log("PDF load timeout, switching to iframe fallback");
+            setUseIframeFallback(true);
+          }
+        }, 10000); // 10 seconds timeout
+        setPdfLoadTimeout(timeout);
+      }
+      
       return () => {
         window.removeEventListener("resize", handleResize);
+        if (pdfLoadTimeout) {
+          clearTimeout(pdfLoadTimeout);
+        }
       };
     }
-  }, []);
+  }, [isSafari, numPages, pdfError, pdfLoadTimeout]);
 
-  // Show loading state until client-side hydration is complete
   if (!isClient) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-100">
@@ -53,19 +80,81 @@ export default function PdfViewerClient() {
     );
   }
 
+  if (pdfError) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center max-w-md mx-4">
+          <div className="text-red-500 text-6xl mb-4">📄</div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Không thể tải PDF</h2>
+          <p className="text-gray-600 mb-4">
+            {isSafari 
+              ? "Trình duyệt Safari có thể gặp vấn đề với PDF. Vui lòng thử Chrome hoặc tải file trực tiếp."
+              : "Có lỗi xảy ra khi tải file PDF. Vui lòng thử lại sau."
+            }
+          </p>
+          <a 
+            href={getStaticAssetPath("/portfolio.pdf")} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
+          >
+            Tải file PDF trực tiếp
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (useIframeFallback) {
+    return (
+      <div className="h-screen bg-yellow-50">
+        <div className="h-full flex flex-col">
+          <iframe
+            src={getStaticAssetPath("/portfolio.pdf")}
+            className="flex-1 w-full border-0"
+            title="Portfolio PDF"
+            onError={() => {
+              setPdfError("Không thể tải PDF với iframe fallback");
+              setUseIframeFallback(false);
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="h-screen overflow-y-scroll bg-yellow-50">
+    <div className="h-screen overflow-y-scroll bg-yellow-50 pb-4">
       <Document
         file={getStaticAssetPath("/portfolio.pdf")}
-        onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+        onLoadSuccess={({ numPages }) => {
+          setNumPages(numPages);
+          setPdfError(null);
+          // Clear timeout if PDF loads successfully
+          if (pdfLoadTimeout) {
+            clearTimeout(pdfLoadTimeout);
+            setPdfLoadTimeout(null);
+          }
+        }}
         onLoadError={(error) => {
           console.error("PDF load error:", error);
+          if (isSafari) {
+            setUseIframeFallback(true);
+          } else {
+            setPdfError(error.message || "Không thể tải file PDF");
+          }
         }}
         className="flex flex-col items-center gap-4 pt-4 px-4"
         loading={
           <div className="flex items-center justify-center h-64 flex-col">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-400"></div>
             <p className="text-red-400 italic">File hơi nặng xíu...</p>
+          </div>
+        }
+        error={
+          <div className="flex items-center justify-center h-64 flex-col">
+            <div className="text-red-500 text-4xl mb-2">⚠️</div>
+            <p className="text-red-500 italic">Lỗi tải file PDF</p>
           </div>
         }
       >
@@ -76,7 +165,15 @@ export default function PdfViewerClient() {
             width={widthPage}
             renderTextLayer={false}
             renderAnnotationLayer={false}
-            className="shadow-lg rounded-lg"
+            className="shadow-xl rounded-lg"
+            onLoadError={(error) => {
+              console.error(`Page ${i + 1} load error:`, error);
+            }}
+            loading={
+              <div className="flex items-center justify-center h-64 w-full bg-yellow-50 rounded-lg">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-400"></div>
+              </div>
+            }
           />
         ))}
       </Document>
