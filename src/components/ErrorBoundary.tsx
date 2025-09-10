@@ -1,5 +1,6 @@
 "use client";
 
+import { getStaticAssetPath } from '@/lib/utils';
 import React from 'react';
 
 interface ErrorBoundaryState {
@@ -38,32 +39,24 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-          <div className="text-center p-8">
-            <div className="text-red-500 text-6xl mb-4">⚠️</div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">
-              Something went wrong
-            </h1>
-            <p className="text-gray-600 mb-6">
-              We&apos;re sorry, but something unexpected happened while loading the page.
+        <div className="h-screen flex items-center justify-center bg-yellow-50">
+          <div className="text-center max-w-md mx-4">
+            <div className="text-red-500 text-6xl mb-4">📄</div>
+            <p className="text-gray-600 mb-4 italic">
+              Trình duyệt Safari có thể gặp vấn đề với PDF. Mọi người click vào đây để mở file trực tiếp nha
             </p>
-            <button
-              onClick={this.resetError}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            <a 
+              href={getStaticAssetPath("/portfolio.pdf")} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block bg-red-800 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
             >
-              Try Again
-            </button>
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="mt-4 text-left">
-                <summary className="cursor-pointer text-sm text-gray-500">
-                  Error Details
-                </summary>
-                <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded overflow-auto">
-                  {this.state.error.toString()}
-                </pre>
-              </details>
-            )}
-          </div>
+              Mở file PDF trực tiếp
+            </a>
+            <p className="text-red-400 mt-4 text-xs px-4 italic">
+              Mọi người có thể liên hệ mình qua Zalo hoặc Messenger ở góc màn hình ạ
+            </p>
+            </div>
         </div>
       );
     }
