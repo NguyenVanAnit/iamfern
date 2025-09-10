@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { getStaticAssetPath } from "@/lib/utils";
 
 const ZaloWidgetButton = () => {
   const openZalo = () => {
@@ -26,7 +27,7 @@ const ZaloWidgetButton = () => {
       }}
     >
       <Image
-        src="/icons/icons-zalo.svg"
+        src={getStaticAssetPath("/icons/icons-zalo.svg")}
         alt="Zalo Icon"
         width={56}
         height={56}

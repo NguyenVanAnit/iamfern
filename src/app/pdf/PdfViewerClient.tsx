@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
+import { getStaticAssetPath } from "@/lib/utils";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -34,7 +35,7 @@ export default function PdfViewerClient() {
   return (
     <div className="h-screen overflow-y-scroll bg-red-200">
       <Document
-        file="/portfolio.pdf"
+        file={getStaticAssetPath("/portfolio.pdf")}
         onLoadSuccess={({ numPages }) => setNumPages(numPages)}
         className="flex flex-col items-center gap-4 pt-4"
       >

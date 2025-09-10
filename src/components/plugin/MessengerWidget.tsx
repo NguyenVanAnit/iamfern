@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { getStaticAssetPath } from "@/lib/utils";
 
 const MessengerChatButton = () => {
   const openMessenger = () => {
@@ -26,7 +27,7 @@ const MessengerChatButton = () => {
       }}
     >
       <Image
-        src="/icons/facebook-messenger-icon.svg"
+        src={getStaticAssetPath("/icons/facebook-messenger-icon.svg")}
         alt="Messenger Icon"
         width={50}
         height={50}
