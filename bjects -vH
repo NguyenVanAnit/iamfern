@@ -1,0 +1,72 @@
+[33mc2c88a8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m fix: bug when first in
+ next.config.ts | 4 [32m++[m[31m--[m
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+[33me7195fa[m fix: bug deploy
+ src/app/pdf/PdfViewerClient.tsx           | 3 [32m++[m[31m-[m
+ src/components/plugin/MessengerWidget.tsx | 3 [32m++[m[31m-[m
+ src/components/plugin/ZaloWidget.tsx      | 3 [32m++[m[31m-[m
+ src/lib/utils.ts                          | 7 [32m+++++++[m
+ 4 files changed, 13 insertions(+), 3 deletions(-)
+[33me349000[m fix: deploy production
+ next.config.ts   | 7 [32m+++++[m[31m--[m
+ src/lib/utils.ts | 2 [32m+[m[31m-[m
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+[33ma4b11a5[m fix: path file
+ next.config.ts | 6 [32m++++[m[31m--[m
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+[33mc4d244c[m fix: change ssr into csr
+ src/app/robot.ts   |  1 [31m-[m
+ src/app/sitemap.ts | 37 [31m-------------------------------------[m
+ 2 files changed, 38 deletions(-)
+[33mbbcbe3c[m fix: html delete
+ src/app/page.tsx | 14 [32m++++++++[m[31m------[m
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+[33mc2d37ad[m Merge branch 'main' of https://github.com/NguyenVanAnit/portfolio-xuyen-nguyen
+[33m5aac545[m feat: add package-lock
+ .gitignore        |    1 [31m-[m
+ package-lock.json | 7344 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++[m
+ 2 files changed, 7344 insertions(+), 1 deletion(-)
+[33mb52052f[m Add GitHub Actions workflow for Next.js deployment
+ .github/workflows/nextjs.yml | 93 [32m++++++++++++++++++++++++++++++++++++++++++++[m
+ 1 file changed, 93 insertions(+)
+[33md983456[m Revise README for personal portfolio details
+ README.md | 38 [32m++[m[31m------------------------------------[m
+ 1 file changed, 2 insertions(+), 36 deletions(-)
+[33m8aeb94a[m first commit
+ .gitignore                                    |  42 [32m++++++[m
+ README.md                                     |  37 [32m+++++[m
+ components.json                               |  21 [32m+++[m
+ eslint.config.mjs                             |  16 [32m+++[m
+ next.config.ts                                |   7 [32m+[m
+ package.json                                  |  38 [32m++++++[m
+ postcss.config.mjs                            |   5 [32m+[m
+ public/icons/DynamicIcon.tsx                  | 140 [32m+++++++++++++++++++[m
+ public/icons/applestore.svg                   |   4 [32m+[m
+ public/icons/chplay.svg                       |   6 [32m+[m
+ public/icons/facebook-messenger-icon.svg      | 131 [32m++++++++++++++++++[m
+ public/icons/icons-zalo.svg                   |   1 [32m+[m
+ public/icons/whatsapp.svg                     |   4 [32m+[m
+ public/logo.svg                               |   9 [32m++[m
+ public/logoText.png                           | Bin [31m0[m -> [32m41021[m bytes
+ public/portfolio.pdf                          | Bin [31m0[m -> [32m3467368[m bytes
+ src/app/favicon.ico                           | Bin [31m0[m -> [32m15406[m bytes
+ src/app/globals.css                           | 122 [32m+++++++++++++++++[m
+ src/app/layout.tsx                            |  54 [32m++++++++[m
+ src/app/loading.tsx                           |   8 [32m++[m
+ src/app/page.tsx                              |  56 [32m++++++++[m
+ src/app/pdf/PdfViewerClient.tsx               |  54 [32m++++++++[m
+ src/app/pdf/page.tsx                          |  11 [32m++[m
+ src/app/robot.ts                              |  14 [32m++[m
+ src/app/sitemap.ts                            |  37 [32m+++++[m
+ src/components/plugin/MessengerWidget.tsx     |  38 [32m++++++[m
+ src/components/plugin/StyleZaloChatWidget.css |  14 [32m++[m
+ src/components/plugin/ZaloChatWidget.tsx      |  29 [32m++++[m
+ src/components/plugin/ZaloWidget.tsx          |  38 [32m++++++[m
+ src/components/ui/accordion.tsx               |  66 [32m+++++++++[m
+ src/components/ui/button.tsx                  |  59 [32m++++++++[m
+ src/components/ui/input.tsx                   |  21 [32m+++[m
+ src/components/ui/select.tsx                  | 190 [32m++++++++++++++++++++++++++[m
+ src/components/ui/slider.tsx                  |  63 [32m+++++++++[m
+ src/lib/utils.ts                              |   6 [32m+[m
+ tsconfig.json                                 |  27 [32m++++[m
+ 36 files changed, 1368 insertions(+)
