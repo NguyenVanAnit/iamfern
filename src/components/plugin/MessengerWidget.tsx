@@ -12,25 +12,14 @@ const MessengerChatButton = () => {
   return (
     <Button
       onClick={openMessenger}
-      style={{
-        position: "fixed",
-        bottom: "120px",
-        right: "50px",
-        // color: "white",
-        padding: "14px",
-        borderRadius: "50px",
-        border: "none",
-        // boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-        zIndex: 9999,
-        cursor: "pointer",
-        backgroundColor: "transparent", // Facebook Messenger color
-      }}
+      className="fixed bottom-20 sm:bottom-32 right-3 sm:right-13 p-2 sm:p-3.5 rounded-full border-none z-[9999] cursor-pointer bg-transparent hover:bg-transparent"
     >
       <Image
         src={getStaticAssetPath("/icons/facebook-messenger-icon.svg")}
         alt="Messenger Icon"
-        width={50}
-        height={50}
+        width={40}
+        height={40}
+        className="sm:w-[50px] sm:h-[50px]"
       />
     </Button>
   );

@@ -12,25 +12,14 @@ const ZaloWidgetButton = () => {
   return (
     <Button
       onClick={openZalo}
-      style={{
-        position: "fixed",
-        bottom: "50px",
-        right: "50px",
-        // color: "white",
-        padding: "14px",
-        borderRadius: "50px",
-        border: "none",
-        // boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-        zIndex: 9999,
-        cursor: "pointer",
-        backgroundColor: "transparent", // Facebook Messenger color
-      }}
+      className="fixed bottom-8 sm:bottom-14 right-2 sm:right-12 p-2 sm:p-3.5 rounded-full border-none z-[9999] cursor-pointer bg-transparent hover:bg-transparent"
     >
       <Image
         src={getStaticAssetPath("/icons/icons-zalo.svg")}
         alt="Zalo Icon"
-        width={56}
-        height={56}
+        width={48}
+        height={48}
+        className="sm:w-[60px] sm:h-[60px]"
       />
     </Button>
   );
