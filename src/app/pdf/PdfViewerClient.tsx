@@ -85,21 +85,20 @@ export default function PdfViewerClient() {
       <div className="h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center max-w-md mx-4">
           <div className="text-red-500 text-6xl mb-4">📄</div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Không thể tải PDF</h2>
-          <p className="text-gray-600 mb-4">
-            {isSafari 
-              ? "Trình duyệt Safari có thể gặp vấn đề với PDF. Vui lòng thử Chrome hoặc tải file trực tiếp."
-              : "Có lỗi xảy ra khi tải file PDF. Vui lòng thử lại sau."
-            }
+          <p className="text-gray-600 mb-4 italic">
+              Trình duyệt Safari có thể gặp vấn đề với PDF. Mọi người click vào đây để mở file trực tiếp nha
           </p>
           <a 
             href={getStaticAssetPath("/portfolio.pdf")} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-block bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
+            className="inline-block bg-red-800 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
           >
-            Tải file PDF trực tiếp
+            Mở file PDF trực tiếp
           </a>
+          <p className="text-red-400 mt-4 text-xs px-4 italic">
+            Mọi người có thể liên hệ mình qua Zalo hoặc Messenger ở góc màn hình ạ
+          </p>
         </div>
       </div>
     );
