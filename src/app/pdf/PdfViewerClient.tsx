@@ -19,6 +19,9 @@ export default function PdfViewerClient() {
   const [isSafari, setIsSafari] = useState(false);
   const [useIframeFallback, setUseIframeFallback] = useState(false);
   const [pdfLoadTimeout, setPdfLoadTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [scale, setScale] = useState<number>(1);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -65,9 +68,40 @@ export default function PdfViewerClient() {
         if (pdfLoadTimeout) {
           clearTimeout(pdfLoadTimeout);
         }
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
       };
     }
-  }, [isSafari, numPages, pdfError, pdfLoadTimeout]);
+  }, [isSafari, numPages, pdfError, pdfLoadTimeout, scrollTimeout]);
+
+  const handleZoomIn = () => {
+    setScale(prev => Math.min(prev + 0.25, 3));
+  };
+
+  const handleZoomOut = () => {
+    setScale(prev => Math.max(prev - 0.25, 0.5));
+  };
+
+  const resetZoom = () => {
+    setScale(1);
+  };
+
+  const currentWidth = widthPage * scale;
+
+  const handleScroll = () => {
+    setIsScrolling(true);
+    
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+    
+    const newTimeout = setTimeout(() => {
+      setIsScrolling(false);
+    }, 1500);
+    
+    setScrollTimeout(newTimeout);
+  };
 
   if (!isClient) {
     return (
@@ -86,7 +120,7 @@ export default function PdfViewerClient() {
         <div className="text-center max-w-md mx-4">
           <div className="text-red-500 text-6xl mb-4">📄</div>
           <p className="text-gray-600 mb-4 italic">
-              Trình duyệt Safari có thể gặp vấn đề với PDF. Mọi người click vào đây để mở file trực tiếp nha
+            Xin chào, là Xuyến đây {`^.^`} Mọi người click vào đây để xem file trực tiếp nha
           </p>
           <a 
             href={getStaticAssetPath("/portfolio.pdf")} 
@@ -94,10 +128,10 @@ export default function PdfViewerClient() {
             rel="noopener noreferrer"
             className="inline-block bg-red-800 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
           >
-            Mở file PDF trực tiếp
+            Xem portfolio
           </a>
           <p className="text-red-400 mt-4 text-xs px-4 italic">
-            Mọi người có thể liên hệ mình qua Zalo hoặc Messenger ở góc màn hình ạ
+            Mọi người có thể liên hệ mình qua SĐT, Zalo và Messenger hoặc tải về thông qua Drive dưới góc ạ
           </p>
         </div>
       </div>
@@ -123,59 +157,87 @@ export default function PdfViewerClient() {
   }
 
   return (
-    <div className="h-screen overflow-y-scroll bg-yellow-50 pb-4">
-      <Document
-        file={getStaticAssetPath("/portfolio.pdf")}
-        onLoadSuccess={({ numPages }) => {
-          setNumPages(numPages);
-          setPdfError(null);
-          // Clear timeout if PDF loads successfully
-          if (pdfLoadTimeout) {
-            clearTimeout(pdfLoadTimeout);
-            setPdfLoadTimeout(null);
-          }
-        }}
-        onLoadError={(error) => {
-          console.error("PDF load error:", error);
-          if (isSafari) {
-            setUseIframeFallback(true);
-          } else {
-            setPdfError(error.message || "Không thể tải file PDF");
-          }
-        }}
-        className="flex flex-col items-center gap-4 pt-4 px-4"
-        loading={
-          <div className="flex items-center justify-center h-64 flex-col">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-400"></div>
-            <p className="text-red-400 italic">File hơi nặng xíu...</p>
-          </div>
-        }
-        error={
-          <div className="flex items-center justify-center h-64 flex-col">
-            <div className="text-red-500 text-4xl mb-2">⚠️</div>
-            <p className="text-red-500 italic">Lỗi tải file PDF</p>
-          </div>
-        }
-      >
-        {Array.from(new Array(numPages || 0), (_, i) => (
-          <Page
-            key={i}
-            pageNumber={i + 1}
-            width={widthPage}
-            renderTextLayer={false}
-            renderAnnotationLayer={false}
-            className="shadow-xl rounded-lg"
-            onLoadError={(error) => {
-              console.error(`Page ${i + 1} load error:`, error);
-            }}
-            loading={
-              <div className="flex items-center justify-center h-64 w-full bg-yellow-50 rounded-lg">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-400"></div>
-              </div>
+    <div className="h-screen overflow-y-scroll bg-yellow-50">
+      <div className={`fixed top-4 right-4 z-10 flex flex-col gap-2 bg-white rounded-lg shadow-lg p-2 transition-opacity duration-300 ${isScrolling ? 'opacity-10' : 'opacity-100'}`}>
+        <button
+          onClick={handleZoomIn}
+          disabled={scale >= 3}
+          className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center text-xl font-bold transition-colors"
+          title="Zoom In"
+        >
+          +
+        </button>
+        <button
+          onClick={resetZoom}
+          className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-500  text-white rounded-lg hover:bg-gray-600 flex items-center justify-center text-[10px] sm:text-xs font-medium transition-colors"
+          title={`Reset Zoom (${Math.round(scale * 100)}%)`}
+        >
+          {Math.round(scale * 100)}%
+        </button>
+        <button
+          onClick={handleZoomOut}
+          disabled={scale <= 0.5}
+          className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center text-xl font-bold transition-colors"
+          title="Zoom Out"
+        >
+          −
+        </button>
+      </div>
+
+      <div className="h-full overflow-y-scroll pb-4" onScroll={handleScroll}>
+        <Document
+          file={getStaticAssetPath("/portfolio.pdf")}
+          onLoadSuccess={({ numPages }) => {
+            setNumPages(numPages);
+            setPdfError(null);
+            // Clear timeout if PDF loads successfully
+            if (pdfLoadTimeout) {
+              clearTimeout(pdfLoadTimeout);
+              setPdfLoadTimeout(null);
             }
-          />
-        ))}
-      </Document>
+          }}
+          onLoadError={(error) => {
+            console.error("PDF load error:", error);
+            if (isSafari) {
+              setUseIframeFallback(true);
+            } else {
+              setPdfError(error.message || "Không thể tải file PDF");
+            }
+          }}
+          className="flex flex-col items-center gap-1 pt-4 px-4"
+          loading={
+            <div className="flex items-center justify-center h-64 flex-col">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-400"></div>
+              <p className="text-red-400 italic">File hơi nặng xíu...</p>
+            </div>
+          }
+          error={
+            <div className="flex items-center justify-center h-64 flex-col">
+              <div className="text-red-500 text-4xl mb-2">⚠️</div>
+              <p className="text-red-500 italic">Lỗi tải file PDF</p>
+            </div>
+          }
+        >
+          {Array.from(new Array(numPages || 0), (_, i) => (
+            <Page
+              key={i}
+              pageNumber={i + 1}
+              width={currentWidth}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+              className="shadow-xl rounded-lg"
+              onLoadError={(error) => {
+                console.error(`Page ${i + 1} load error:`, error);
+              }}
+              loading={
+                <div className="flex items-center justify-center h-64 w-full bg-yellow-50 rounded-lg">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-400"></div>
+                </div>
+              }
+            />
+          ))}
+        </Document>
+      </div>
     </div>
   );
 }
