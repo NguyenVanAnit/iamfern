@@ -43,7 +43,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
           <div className="text-center max-w-md mx-4">
             <div className="text-red-500 text-6xl mb-4">📄</div>
             <p className="text-gray-600 mb-4 italic">
-              Trình duyệt Safari có thể gặp vấn đề với PDF. Mọi người click vào đây để mở file trực tiếp nha
+              Xin chào, là Xuyến đây {`^.^`} Mọi người click vào đây để xem file trực tiếp nha
             </p>
             <a 
               href={getStaticAssetPath("/portfolio.pdf")} 
@@ -51,10 +51,10 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
               rel="noopener noreferrer"
               className="inline-block bg-red-800 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
             >
-              Mở file PDF trực tiếp
+              Xem portfolio
             </a>
             <p className="text-red-400 mt-4 text-xs px-4 italic">
-              Mọi người có thể liên hệ mình qua Zalo hoặc Messenger ở góc màn hình ạ
+              Mọi người có thể liên hệ mình qua SĐT, Zalo và Messenger hoặc tải về thông qua Drive dưới góc ạ
             </p>
             </div>
         </div>

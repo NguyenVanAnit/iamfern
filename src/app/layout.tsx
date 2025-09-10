@@ -5,6 +5,8 @@ import Head from "next/head";
 import MessengerChatButton from "@/components/plugin/MessengerWidget";
 // import ZaloChatWidget from "@/components/plugin/ZaloChatWidget";
 import ZaloWidgetButton from "@/components/plugin/ZaloWidget";
+import PhoneWidget from "@/components/plugin/PhoneWidget";
+import DriveButton from "@/components/plugin/DriveWidget";
 // import HeaderImageLayout from "@/components/molecules/HeaderImageLayout";
 
 export const metadata: Metadata = {
@@ -43,6 +45,8 @@ export default function RootLayout({
       </Head>
       <body className={`${inter.className} relative`}>
         <div className="fixed bottom-4 right-4 z-50">
+          <DriveButton />
+          <PhoneWidget />
           <MessengerChatButton />
           <ZaloWidgetButton />
 				</div>
